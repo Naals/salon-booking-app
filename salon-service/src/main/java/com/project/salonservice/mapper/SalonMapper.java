@@ -5,6 +5,8 @@ import com.project.salonservice.payload.dto.SalonDto;
 
 public class SalonMapper {
 
+    private SalonMapper() {}
+
     public static SalonDto toDto(Salon salon) {
         if (salon == null) {
             return null;
@@ -22,9 +24,6 @@ public class SalonMapper {
         dto.setOpenTime(salon.getOpenTime());
         dto.setCloseTime(salon.getCloseTime());
 
-        // Note: owner (UserDto) needs to be set manually in the Service
-        // because the Salon entity only contains the ownerId.
-
         return dto;
     }
 
@@ -34,7 +33,6 @@ public class SalonMapper {
         }
 
         Salon salon = new Salon();
-        salon.setId(dto.getId());
         salon.setName(dto.getName());
         salon.setImages(dto.getImages());
         salon.setAddress(dto.getAddress());
