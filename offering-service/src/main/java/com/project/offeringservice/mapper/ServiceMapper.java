@@ -1,6 +1,8 @@
 package com.project.offeringservice.mapper;
 
 import com.project.offeringservice.modal.ServiceOffering;
+import com.project.offeringservice.payload.dto.CategoryDto;
+import com.project.offeringservice.payload.dto.SalonDto;
 import com.project.offeringservice.payload.dto.ServiceDto;
 
 public class ServiceMapper {
@@ -27,7 +29,7 @@ public class ServiceMapper {
         return dto;
     }
 
-    public static ServiceOffering toEntity(ServiceDto dto) {
+    public static ServiceOffering toEntity(ServiceDto dto, SalonDto salonDto, CategoryDto categoryDto) {
 
         if (dto == null) {
             return null;
@@ -39,8 +41,8 @@ public class ServiceMapper {
         service.setDescription(dto.getDescription());
         service.setPrice(dto.getPrice());
         service.setDuration(dto.getDuration());
-        service.setCategoryId(dto.getCategoryId());
-        service.setSalonId(dto.getSalonId());
+        service.setCategoryId(categoryDto.getId());
+        service.setSalonId(salonDto.getId());
         service.setImage(dto.getImage());
 
         return service;
