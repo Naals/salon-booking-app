@@ -56,4 +56,11 @@ public class ServiceOfferingServiceImpl implements ServiceOfferingService {
     public Set<ServiceOffering> getServiceByIds(Set<Long> ids) {
         return null;
     }
+
+    @Override
+    public ServiceOffering getServiceById(Long id) {
+        return serviceOfferingRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Service with id " + id + " not found")
+        );
+    }
 }
