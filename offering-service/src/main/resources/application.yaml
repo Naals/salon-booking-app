@@ -12,4 +12,4 @@ spring:
     show-sql: true
 
 server:
-  port: 5003
+  port: 5004
