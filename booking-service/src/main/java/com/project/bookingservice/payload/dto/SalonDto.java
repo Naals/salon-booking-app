@@ -2,7 +2,7 @@ package com.project.bookingservice.payload.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -26,7 +26,7 @@ public class SalonDto {
 
     private UserDto owner;
 
-    private LocalDateTime openTime;
+    private LocalTime openTime;
 
-    private LocalDateTime closeTime;
+    private LocalTime closeTime;
 }
