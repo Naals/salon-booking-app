@@ -7,7 +7,6 @@ import com.project.bookingservice.modal.SalonReport;
 import com.project.bookingservice.payload.dto.*;
 import com.project.bookingservice.payload.request.BookingRequest;
 import com.project.bookingservice.service.BookingService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

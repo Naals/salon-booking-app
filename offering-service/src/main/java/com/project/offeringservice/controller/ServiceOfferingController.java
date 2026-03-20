@@ -2,7 +2,6 @@ package com.project.offeringservice.controller;
 
 import com.project.offeringservice.modal.ServiceOffering;
 import com.project.offeringservice.services.ServiceOfferingService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
