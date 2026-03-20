@@ -3,6 +3,7 @@ package com.project.bookingservice.controller;
 import com.project.bookingservice.domain.BookingStatus;
 import com.project.bookingservice.mapper.BookingMapper;
 import com.project.bookingservice.modal.Booking;
+import com.project.bookingservice.modal.SalonReport;
 import com.project.bookingservice.payload.dto.*;
 import com.project.bookingservice.payload.request.BookingRequest;
 import com.project.bookingservice.service.BookingService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +36,8 @@ public class BoookingController {
 
         SalonDto salon = new SalonDto();
         salon.setId(salonId);
+        salon.setOpenTime(LocalTime.now());
+        salon.setCloseTime(LocalTime.now().plusHours(12));
 
         Set<ServiceDto> serviceDtoSet = new HashSet<>();
 
@@ -108,5 +112,11 @@ public class BoookingController {
                 }).toList();
 
         return ResponseEntity.ok(bookingSlotDto);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<SalonReport> getSalonReport(){
+        SalonReport salonReport = bookingService.getSalonReport(1L);
+        return ResponseEntity.ok(salonReport);
     }
 }
