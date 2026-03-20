@@ -13,3 +13,7 @@ spring:
 
 server:
   port: 5006
+
+stripe:
+  api:
+    key: "secret-api-key"

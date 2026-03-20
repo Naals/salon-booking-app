@@ -29,4 +29,7 @@ public class PaymentOrder {
 
     @Column(nullable = false)
     private Long salonId;
+
+    @Column(nullable = false)
+    private Long bookingId;
 }
