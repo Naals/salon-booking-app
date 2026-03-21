@@ -92,4 +92,9 @@ public class PaymentServiceImpl implements PaymentService {
         Session session = Session.create(params);
         return session.getUrl();
     }
+
+    @Override
+    public Boolean proceedPayment(PaymentOrder paymentOrder, String paymentId, String paymentLinkId) {
+        return null;
+    }
 }
