@@ -1,6 +1,7 @@
 package com.project.paymentservice.service.impl;
 
 import com.project.paymentservice.domain.PaymentMethod;
+import com.project.paymentservice.domain.PaymentOrderStatus;
 import com.project.paymentservice.modal.PaymentOrder;
 import com.project.paymentservice.payload.dto.BookingDto;
 import com.project.paymentservice.payload.dto.UserDto;
@@ -95,6 +96,10 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Boolean proceedPayment(PaymentOrder paymentOrder, String paymentId, String paymentLinkId) {
-        return null;
+        if(paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)){
+            paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
+            paymentRepository.save(paymentOrder);
+        }
+        return true;
     }
 }
