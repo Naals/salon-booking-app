@@ -1,0 +1,1 @@
+CREATE DATABASE sb_booking_db;
