@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bookings")
-public class BoookingController {
+public class BookingController {
 
     private final BookingService bookingService;
 
