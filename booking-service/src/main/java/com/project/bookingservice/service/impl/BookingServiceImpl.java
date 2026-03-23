@@ -12,6 +12,7 @@ import com.project.bookingservice.service.BookingService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,14 +26,15 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
 
+    @Transactional
     @Override
     public Booking createBooking(BookingRequest booking, UserDto user, SalonDto salon, Set<ServiceDto> serviceDtoSet) throws Exception {
         int totalDuration = serviceDtoSet.stream().mapToInt(ServiceDto::getDuration).sum();
 
         LocalDateTime bookingStartTime = booking.getStartTime();
-        LocalDateTime bookingEndTime = booking.getEndTime();
+        LocalDateTime bookingEndTime = bookingStartTime.plusMinutes(totalDuration);
 
-        Boolean isSlotAvailable = isTimeSlotAvailable(salon, bookingStartTime, bookingEndTime);
+        validateTimeSlot(salon, bookingStartTime, bookingEndTime);
 
         int totalPrice = serviceDtoSet.stream().mapToInt(ServiceDto::getPrice).sum();
 
@@ -47,35 +49,40 @@ public class BookingServiceImpl implements BookingService {
         newBooking.setEndTime(bookingEndTime);
         newBooking.setTotalPrice(totalPrice);
 
-        return newBooking;
+        return bookingRepository.save(newBooking);
     }
 
-    public Boolean isTimeSlotAvailable(SalonDto salonDto,
-                                       LocalDateTime bookingStartTime,
-                                       LocalDateTime bookingEndTime
-    ) throws Exception {
-        List<Booking> existingBookings = getBookingBySalonId(salonDto.getId());
+    public void validateTimeSlot(SalonDto salonDto,
+                                 LocalDateTime bookingStartTime,
+                                 LocalDateTime bookingEndTime) throws IllegalAccessException {
 
-        LocalDateTime salonOpenTime = salonDto.getOpenTime().atDate(bookingStartTime.toLocalDate());
-        LocalDateTime salonCloseTime = salonDto.getCloseTime().atDate(bookingEndTime.toLocalDate());
+        LocalDateTime openTime = salonDto.getOpenTime()
+                .atDate(bookingStartTime.toLocalDate());
 
-        if(bookingStartTime.isBefore(salonOpenTime) || bookingEndTime.isAfter(salonCloseTime)) {
-            throw new Exception("Booking time must be within the working hours");
+        LocalDateTime closeTime = salonDto.getCloseTime()
+                .atDate(bookingStartTime.toLocalDate());
+
+        if (bookingStartTime.isBefore(openTime) || bookingEndTime.isAfter(closeTime)) {
+            throw new IllegalAccessException("Outside working hours");
         }
 
-        for(Booking existingBooking : existingBookings) {
-            LocalDateTime existingBookingStartTime = existingBooking.getStartTime();
-            LocalDateTime existingBookingEndTime = existingBooking.getEndTime();
+        LocalDateTime startOfDay = bookingStartTime.toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = bookingStartTime.toLocalDate().atTime(23, 59);
 
-            if(bookingStartTime.isBefore(existingBookingEndTime) || bookingEndTime.isAfter(existingBookingStartTime)) {
-                throw new Exception("Slot not available, choose different time");
-            }
+        List<Booking> bookings =
+                bookingRepository.findBySalonIdAndStartTimeBetween(
+                        salonDto.getId(), startOfDay, endOfDay
+                );
 
-            if(bookingStartTime.isEqual(existingBookingStartTime) || bookingEndTime.isEqual(existingBookingEndTime)){
-                throw new Exception("Slot not available, choose different time");
+        for (Booking b : bookings) {
+
+            if (b.getStatus() == BookingStatus.CANCELLED) continue;
+
+            if (bookingStartTime.isBefore(b.getEndTime()) &&
+                    bookingEndTime.isAfter(b.getStartTime())) {
+                throw new IllegalAccessException("Slot not available");
             }
         }
-        return true;
     }
 
     @Override
@@ -85,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getBookingBySalonId(Long salonId) {
-        return bookingRepository.findBookingSalonId(salonId);
+        return bookingRepository.findBySalonId(salonId);
     }
 
     @Override
@@ -116,12 +123,10 @@ public class BookingServiceImpl implements BookingService {
             return allBookings;
         }
 
-        allBookings.stream()
+        return allBookings.stream()
                 .filter(booking -> isSameDate(booking.getStartTime(), date) ||
-                    isSameDate(booking.getEndTime(), date))
+                        isSameDate(booking.getEndTime(), date))
                 .toList();
-
-        return allBookings;
     }
 
     private boolean isSameDate(LocalDateTime dateTime, LocalDate date) {
@@ -134,7 +139,7 @@ public class BookingServiceImpl implements BookingService {
 
         int totalEarnings = allBookings.stream().mapToInt(Booking::getTotalPrice).sum();
 
-        Integer totalBookings = allBookings.size();
+        int totalBookings = allBookings.size();
 
         List<Booking> cancelledBookings = allBookings.stream()
                 .filter(booking -> booking.getStatus().equals(BookingStatus.CANCELLED))
