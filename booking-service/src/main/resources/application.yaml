@@ -10,8 +10,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-server:
-  port: 5005
 
 eureka:
   instance:
@@ -21,3 +19,6 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:8070/eureka/
+
+server:
+  port: 5005
