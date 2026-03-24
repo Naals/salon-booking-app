@@ -2,11 +2,9 @@ package com.project.userservice.service;
 
 import com.project.userservice.exception.UserException;
 import com.project.userservice.model.User;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface UserService {
 
     User createUser(User user);

@@ -5,9 +5,11 @@ import com.project.userservice.model.User;
 import com.project.userservice.repository.UserRepository;
 import com.project.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
