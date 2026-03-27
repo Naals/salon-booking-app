@@ -128,6 +128,35 @@ services:
     networks:
       - app
 
+  offering-service:
+    image: "naals/offering-service-yt-sa:v1"
+    platform: linux/amd64
+    ports:
+      - "5004:5004"
+    healthcheck:
+      test: "curl --fail --silent offering-service:5004/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    container_name: offering-service-sa
+    environment:
+      SPRING_APPLICATION_NAME: "offering-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/sb_offering_service_db"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: mysql
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - app
 networks:
   app:
     driver: "bridge"
