@@ -37,6 +37,35 @@ services:
     networks:
       - app
 
+  salon-service:
+    image: "naals/salon-service-yt-sa:v1"
+    platform: linux/amd64
+    ports:
+      - "5002:5002"
+    healthcheck:
+      test: "curl --fail --silent salon-service:5002/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    container_name: salon-service-sa
+    environment:
+      SPRING_APPLICATION_NAME: "salon-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/sb_salon_db"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: mysql
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka
+    depends_on:
+      mysql:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - app
 
 networks:
   app:
