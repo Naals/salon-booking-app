@@ -9,6 +9,14 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - app
 
   eurekaserver:
     image: "naals/eureka-server-yt:v1"
