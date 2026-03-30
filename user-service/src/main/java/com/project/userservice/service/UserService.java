@@ -1,7 +1,7 @@
 package com.project.userservice.service;
 
 import com.project.userservice.exception.UserException;
-import com.project.userservice.model.User;
+import com.project.userservice.modal.User;
 
 import java.util.List;
 
@@ -12,4 +12,5 @@ public interface UserService {
     List<User> getAllUsers();
     void deleteUser(Long id) throws UserException;
     User updateUser(Long id, User user) throws UserException;
+    User getUserByJwtToken(String jwt) throws Exception;
 }

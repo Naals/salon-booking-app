@@ -1,7 +1,7 @@
 package com.project.userservice.controller;
 
 import com.project.userservice.exception.UserException;
-import com.project.userservice.model.User;
+import com.project.userservice.modal.User;
 import com.project.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,12 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody @Valid User user) {
         User createdUser = userService.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/api/users/profile")
+    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.getUserByJwtToken(jwt);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

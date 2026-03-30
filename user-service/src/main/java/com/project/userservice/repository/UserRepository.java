@@ -1,9 +1,10 @@
 package com.project.userservice.repository;
 
-import com.project.userservice.model.User;
+import com.project.userservice.modal.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    User findByUsername(String username);
 }

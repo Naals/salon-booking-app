@@ -1,8 +1,10 @@
 package com.project.userservice.service.impl;
 
 import com.project.userservice.exception.UserException;
-import com.project.userservice.model.User;
+import com.project.userservice.modal.User;
+import com.project.userservice.payload.dto.KeycloakUserDTO;
 import com.project.userservice.repository.UserRepository;
+import com.project.userservice.service.KeycloakService;
 import com.project.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final KeycloakService keycloakService;
 
     @Override
     public User createUser(User user) {
@@ -48,5 +51,11 @@ public class UserServiceImpl implements UserService {
         user.setPhone(updatedUser.getPhone());
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User getUserByJwtToken(String jwt) throws Exception {
+        KeycloakUserDTO dto = keycloakService.fetchUserProfileByJwt(jwt);
+        return userRepository.findByUsername(dto.getUsername());
     }
 }
