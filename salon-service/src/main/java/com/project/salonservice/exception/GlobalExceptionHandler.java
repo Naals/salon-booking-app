@@ -1,6 +1,6 @@
-package com.project.userservice.exception;
+package com.project.salonservice.exception;
 
-import com.project.userservice.payload.response.ExceptionResponse;
+import com.project.salonservice.payload.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
