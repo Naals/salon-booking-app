@@ -1,5 +1,6 @@
-package com.project.userservice.model;
+package com.project.userservice.modal;
 
+import com.project.userservice.domain.UserRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,13 +26,16 @@ public class User {
     @NotBlank(message = "Name is mandatory")
     private String fullName;
 
+    @NotBlank(message = "Username is mandatory")
+    private String username;
+
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
     private String email;
     private String phone;
 
     @NotBlank(message = "Role is mandatory")
-    private String role;
+    private UserRole role;
 
     @NotBlank(message = "Password is mandatory")
     private String password;
