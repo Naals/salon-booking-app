@@ -1,10 +1,11 @@
 package com.project.categoryservice.service.impl;
 
+import com.project.categoryservice.exceptions.CategoryNotFoundException;
+import com.project.categoryservice.exceptions.UnauthorizedAccessException;
 import com.project.categoryservice.payload.dto.SalonDto;
 import com.project.categoryservice.modal.Category;
 import com.project.categoryservice.repository.CategoryRepository;
 import com.project.categoryservice.service.CategoryService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,18 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category saveCategory(Category category, SalonDto salonDto) {
 
+        if (category == null) {
+            throw new IllegalArgumentException("Category cannot be null");
+        }
+
+        if (salonDto == null || salonDto.getId() == null) {
+            throw new IllegalArgumentException("Salon data is invalid");
+        }
+
+        if (category.getName() == null || category.getName().isBlank()) {
+            throw new IllegalArgumentException("Category name cannot be empty");
+        }
+
         Category newCategory = new Category();
         newCategory.setName(category.getName());
         newCategory.setImage(category.getImage());
@@ -30,27 +43,85 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+
+        if (categories.isEmpty()) {
+            return List.of();
+        }
+
+        return categories;
     }
 
     @Override
     public Set<Category> getAllCategoriesBySalonId(Long salonId) {
-        return categoryRepository.findBySalonId(salonId);
+
+        if (salonId == null || salonId <= 0) {
+            throw new IllegalArgumentException("Invalid salon id: " + salonId);
+        }
+
+        Set<Category> categories = categoryRepository.findBySalonId(salonId);
+
+        if (categories.isEmpty()) {
+            return Set.of();
+        }
+
+        return categories;
     }
 
     @Override
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Category with id " + id + " not found")
-        );
+
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Invalid category id: " + id);
+        }
+
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(
+                        "Category not found with id: " + id
+                ));
     }
 
     @Override
-    public void deleteCategoryById(Long id, Long salonId) throws Exception {
-        Category category = getCategoryById(id);
-        if(!category.getSalonId().equals(salonId)) {
-            throw new Exception("You do not have permission to delete this category");
+    public void deleteCategoryById(Long id, Long salonId) {
+
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Invalid category id: " + id);
         }
+
+        if (salonId == null || salonId <= 0) {
+            throw new IllegalArgumentException("Invalid salon id: " + salonId);
+        }
+
+        Category category = getCategoryById(id);
+
+        if (!category.getSalonId().equals(salonId)) {
+            throw new UnauthorizedAccessException(
+                    "You do not have permission to delete this category"
+            );
+        }
+
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public Category getCategoryByIdAndSalonId(Long id, Long salonId) {
+
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Invalid category id: " + id);
+        }
+
+        if (salonId == null || salonId <= 0) {
+            throw new IllegalArgumentException("Invalid salon id: " + salonId);
+        }
+
+        Category category = categoryRepository.findByIdAndSalonId(id, salonId);
+
+        if (category == null) {
+            throw new CategoryNotFoundException(
+                    "Category not found with id: " + id + " for salon: " + salonId
+            );
+        }
+
+        return category;
     }
 }
