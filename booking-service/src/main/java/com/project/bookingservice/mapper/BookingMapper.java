@@ -8,6 +8,7 @@ public class BookingMapper {
     public static BookingDto toDto(Booking booking){
         BookingDto bookingDto = new BookingDto();
         bookingDto.setId(booking.getId());
+        bookingDto.setTotalPrice(booking.getTotalPrice());
         bookingDto.setCustomerId(booking.getCustomerId());
         bookingDto.setSalonId(booking.getSalonId());
         bookingDto.setStatus(booking.getStatus());
