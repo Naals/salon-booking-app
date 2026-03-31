@@ -35,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
         order.setPaymentMethod(paymentMethod);
         order.setBookingId(booking.getId());
         order.setSalonId(booking.getSalonId());
+        order.setUserId(user.getId());
 
         PaymentOrder savedOrder = paymentRepository.save(order);
 
@@ -52,12 +53,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentOrder getPaymentOrderById(Long id) {
-        PaymentOrder paymentOrder = paymentRepository.findById(id).orElseThrow(
+        return paymentRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("Payment with id %d not found", id))
         );
-
-
-        return paymentOrder;
     }
 
     @Override
