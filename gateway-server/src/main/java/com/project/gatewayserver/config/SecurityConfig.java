@@ -24,6 +24,7 @@ public class SecurityConfig {
             "/api/payments/**",
             "/api/service-offering/**",
             "/api/users/**",
+            "/api/notifications/**",
             "/api/reviews/**"
     };
 

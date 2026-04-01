@@ -51,6 +51,12 @@ spring:
                 - Path=/auth/**
                 - Path=/api/admin/users/**
                 - Path=/users/**
+
+            - id: NOTIFICATION-SERVICE
+              uri:
+                "lb://NOTIFICATION-SERVICE"
+              predicates:
+                - Path= /api/notifications/**
 eureka:
   instance:
     prefer-ip-address: true
