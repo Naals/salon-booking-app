@@ -11,6 +11,12 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  rabbitmq:
+    port: 5672
+    host: localhost
+    username: guest
+    password: guest
+
 eureka:
   instance:
     prefer-ip-address: true
@@ -19,6 +25,7 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:8070/eureka/
+
 
 server:
   port: 5006

@@ -1,15 +1,15 @@
 spring:
   application:
-    name: booking-service
+    name: notification-service
   datasource:
-    url: jdbc:mysql://localhost:3306/sb_booking_db
+    url: jdbc:mysql://localhost:3306/sb_user_db
     username: root
     password: mysql
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
 
   rabbitmq:
     port: 5672
@@ -27,4 +27,4 @@ eureka:
       defaultZone: http://localhost:8070/eureka/
 
 server:
-  port: 5005
+  port: 5007
