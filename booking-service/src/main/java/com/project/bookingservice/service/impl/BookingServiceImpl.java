@@ -2,6 +2,7 @@ package com.project.bookingservice.service.impl;
 
 import com.project.bookingservice.domain.BookingStatus;
 import com.project.bookingservice.modal.Booking;
+import com.project.bookingservice.modal.PaymentOrder;
 import com.project.bookingservice.modal.SalonReport;
 import com.project.bookingservice.payload.dto.SalonDto;
 import com.project.bookingservice.payload.dto.ServiceDto;
@@ -110,12 +111,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void deleteBooking(Long bookingId) {
-        Booking booking = getBookingById(bookingId);
-        bookingRepository.delete(booking);
-    }
-
-    @Override
     public List<Booking> getBookingByDate(LocalDate date, Long salonId) {
         List<Booking> allBookings = getBookingBySalonId(salonId);
 
@@ -155,6 +150,13 @@ public class BookingServiceImpl implements BookingService {
         salonReport.setSalonId(salonId);
         return salonReport;
 
+    }
+
+    @Override
+    public void bookingSuccess(PaymentOrder paymentOrder) {
+        Booking booking = getBookingById(paymentOrder.getBookingId());
+        booking.setStatus(BookingStatus.CONFIRMED);
+        bookingRepository.save(booking);
     }
 }
 

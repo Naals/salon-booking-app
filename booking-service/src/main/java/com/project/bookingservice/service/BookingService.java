@@ -2,6 +2,7 @@ package com.project.bookingservice.service;
 
 import com.project.bookingservice.domain.BookingStatus;
 import com.project.bookingservice.modal.Booking;
+import com.project.bookingservice.modal.PaymentOrder;
 import com.project.bookingservice.modal.SalonReport;
 import com.project.bookingservice.payload.dto.ServiceDto;
 import com.project.bookingservice.payload.request.BookingRequest;
@@ -19,7 +20,7 @@ public interface BookingService {
     List<Booking> getBookingBySalonId(Long salonId);
     Booking getBookingById(Long id);
     Booking updateBooking(Long bookingId, BookingStatus status);
-    void deleteBooking(Long bookingId);
     List<Booking> getBookingByDate(LocalDate date, Long salonId);
     SalonReport getSalonReport(Long salonId);
+    void bookingSuccess(PaymentOrder paymentOrder);
 }
